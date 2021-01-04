@@ -21,13 +21,11 @@ const showUserProfile = (userId, cb) => {
         ${user.name}
       </div>
     `
-    cb(profile)
+    cb(user)
   })
 }
 
 module.exports = {
-  showPostsForCurrentUser,
-  showUserProfile
+    showPostsForCurrentUser, 
+    showUserProfile
 }
-
-

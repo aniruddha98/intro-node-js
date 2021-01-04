@@ -2,10 +2,13 @@ const http = require('http')
 const url = require('url')
 const fs = require('fs')
 const path = require('path')
+const { resolve } = require('path')
+const { rejects } = require('assert')
+const e = require('express')
 const mime = require('mime')
 
 /**
- * async function that reads asset from disk
+ * this function is blocking, fix that
  * @param {String} name full file name of asset in asset folder
  */
 const findAsset = (name) => {
@@ -23,13 +26,12 @@ const findAsset = (name) => {
 
 const hostname = '127.0.0.1'
 const port = 3000
-// simple, quick router object
 const router = {
-  '/ GET': {
+  '/ GET' : {
     asset: 'index.html',
     type: mime.getType('html')
   },
-  '/style.css GET': {
+  '/style.css GET' : {
     asset: 'style.css',
     type: mime.getType('css')
   }
@@ -41,23 +43,19 @@ const logRequest = (method, route, status) => console.log(method, route, status)
 const server = http.createServer(async (req, res) => {
   const method = req.method
   const route = url.parse(req.url).pathname
-  // check the router for the incomming route + method pair
-  const routeMatch = router[`${route} ${method}`]
-  // return not found if the router does not have a match
-  if (!routeMatch) {
+  const match = router[`${route} ${method}`]
+  if (!match) {
     res.writeHead(404)
-    logRequest(method, route, 404)
-    return res.end()
+    logRequest(method, route, 200)
+    res.end()
+    return
   }
-
-  const {type, asset} = routeMatch
-
-  // set the content-type header for the asset so applications like a browser will know how to handle it
-  res.writeHead(200,{'Content-Type': type})
-  // most important part, send down the asset
-  res.write(await findAsset(asset))
+  // this is sloppy, especially with more assets, create a "router"
+  res.writeHead(200, {'Content-Type': match.type})
+  res.write(await findAsset(match.asset))
   logRequest(method, route, 200)
   res.end()
+  // most important part, send down the asset
 })
 
 server.listen(port, hostname, () => {

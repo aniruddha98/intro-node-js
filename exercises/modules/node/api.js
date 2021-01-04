@@ -17,6 +17,6 @@ const getPostsForUser = (userId, cb) => {
 }
 
 module.exports = {
-  getUserById,
-  getPostsForUser
+    getUserById, 
+    getPostsForUser
 }
