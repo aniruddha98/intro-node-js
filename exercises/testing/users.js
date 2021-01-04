@@ -6,10 +6,11 @@ const users = new Array(20).fill(0)
     email: `readycoder${i}@gmail.com`
   }
 })
+const fixId = (id) => parseInt(id)
 
 // simulate async db call with promise
 const findUser = (id) => new Promise((resolve, reject) => {
-  const user = users.find(user => user.id === id)
+  const user = users.find(user => user.id === fixId(id))
   if (user) {
     return resolve(user)
   }
@@ -31,5 +32,6 @@ const deleteUser = (id) => new Promise((resolve, reject) => {
 
 module.exports = {
   findUser,
-  deleteUser
+  deleteUser,
+  fixId
 }
