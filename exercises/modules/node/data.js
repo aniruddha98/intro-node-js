@@ -1,4 +1,4 @@
-window.App = {
+const output = {
   users: [
     {id: 1, name: 'Weezy'}
   ],
@@ -8,3 +8,5 @@ window.App = {
     {title: 'My doggy', body: 'my dog is better than yours', createdBy: 1}
   ]
 }
+
+module.exports = output
